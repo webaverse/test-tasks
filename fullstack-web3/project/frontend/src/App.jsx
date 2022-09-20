@@ -3,7 +3,9 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import List from './components/List';
 
-const mockups = [
+
+
+const mockups_currencies = [
   {
     "id": "bitcoin",
     "icon": "https://static.coinstats.app/coins/1650455588819.png",
@@ -145,22 +147,36 @@ const mockups = [
 
 ]
 
+const mockups_trade = [
+  { currency: 'BTC', exchange: 'Pancakeswap' },
+  { currency: 'ETH', exchange: 'Uniswap' },
+  { currency: 'AVX', exchange: 'Biswap' },
+  { currency: 'BNB', exchange: 'Pancakeswap' },
+  { currency: 'SOL', exchange: 'Solswap' },
+];
+
 const App = () => {
 
   const options = [
-    'one', 'two', 'three'
+    'USD', 'HKD', 'KRW', 'SGD'
   ];
+
   const defaultOption = options[0];
 
   const [currencies, setCurrnecies] = useState([]);
   const [selectValue, setSelectValue] = useState(defaultOption);
+  const [trade, setTrade] = useState([]);
 
   useEffect(() => {
-    setCurrnecies(mockups);
+    setCurrnecies(mockups_currencies);
   }, [currencies]);
 
+  useEffect(() => {
+    setTrade(mockups_trade);
+  }, [selectValue]);
+
   const handleOrderbyName = () => {
-    mockups.sort((a, b) => {
+    mockups_currencies.sort((a, b) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA < nameB) {
@@ -172,12 +188,12 @@ const App = () => {
 
       return 0;
     });
-    setCurrnecies([...mockups]);
+    setCurrnecies([...mockups_currencies]);
   }
 
   const handleOrderbyRanking = () => {
-    mockups.sort((a, b) => a.rank - b.rank);
-    setCurrnecies([...mockups]);
+    mockups_currencies.sort((a, b) => a.rank - b.rank);
+    setCurrnecies([...mockups_currencies]);
   }
 
   return (
@@ -200,6 +216,9 @@ const App = () => {
             value={selectValue}
           />
         </div>
+      </div>
+      <div className='mt-10'>
+        <List trade={trade} />
       </div>
     </div>
   )
