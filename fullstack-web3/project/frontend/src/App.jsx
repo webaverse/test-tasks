@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import List from './components/List';
 
 const mockups = [
@@ -145,7 +147,13 @@ const mockups = [
 
 const App = () => {
 
+  const options = [
+    'one', 'two', 'three'
+  ];
+  const defaultOption = options[0];
+
   const [currencies, setCurrnecies] = useState([]);
+  const [selectValue, setSelectValue] = useState(defaultOption);
 
   useEffect(() => {
     setCurrnecies(mockups);
@@ -174,14 +182,25 @@ const App = () => {
 
   return (
     <div className="flex flex-col justy-center items-center mt-20">
-      <div className="order flex justy-center items-center mb-10">
+      <div className="order-button flex justy-center items-center mb-10">
         <button className="mx-5 bg-blue-600 text-white px-5 py-2" onClick={handleOrderbyRanking}>By Ranking</button>
         <button className="mx-5 bg-blue-600 text-white px-5 py-2" onClick={handleOrderbyName}>By Name</button>
       </div>
       <div>
         <List currencies={currencies} />
       </div>
-      <div></div>
+      <div className="dropdown w-96 flex justify-start items-center mt-10">
+        <p className="mr-10">Select currency: </p>
+        <div className="dropdownMenu w-40">
+          <Dropdown
+            options={options}
+            onChange={(e) => {
+              setSelectValue(e.value);
+            }}
+            value={selectValue}
+          />
+        </div>
+      </div>
     </div>
   )
 }
