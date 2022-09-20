@@ -47,7 +47,6 @@ const App = () => {
       .then(
         async (data) => {
           fetchedData = [];
-          console.log("current:", data.coins);
           for await (const currency of data.coins) {
             try {
               const response = await axios.get(`${baseURL}?coinId=${currency.id}&symbol=${currency.symbol}&currency=${selectValue}`);
