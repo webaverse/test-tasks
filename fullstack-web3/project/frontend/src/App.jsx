@@ -149,14 +149,27 @@ const App = () => {
 
   useEffect(() => {
     setCurrnecies(mockups);
-  });
+  }, [currencies]);
 
   const handleOrderbyName = () => {
-    console.log('Order by Name');
+    mockups.sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      return 0;
+    });
+    setCurrnecies([...mockups]);
   }
 
   const handleOrderbyRanking = () => {
-    console.log('Order by Ranking');
+    mockups.sort((a, b) => a.rank - b.rank);
+    setCurrnecies([...mockups]);
   }
 
   return (
