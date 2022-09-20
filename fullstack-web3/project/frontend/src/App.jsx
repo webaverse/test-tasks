@@ -2,150 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import List from './components/List';
-
-
-
-const mockups_currencies = [
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "A",
-    "symbol": "BTC",
-    "rank": 1,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "B",
-    "symbol": "BTC",
-    "rank": 2,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "CBitcoin",
-    "symbol": "BTC",
-    "rank": 4,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "DBitcoin",
-    "symbol": "BTC",
-    "rank": 3,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "1Bitcoin",
-    "symbol": "BTC",
-    "rank": 5,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-  {
-    "id": "bitcoin",
-    "icon": "https://static.coinstats.app/coins/1650455588819.png",
-    "name": "Bitcoin",
-    "symbol": "BTC",
-    "rank": 1,
-    "price": 18840.18106022015,
-    "priceBtc": 1,
-    "volume": 35137475944.003006,
-    "marketCap": 360876471259.352,
-    "availableSupply": 19154618,
-    "totalSupply": 21000000,
-    "priceChange1h": -3.2,
-    "priceChange1d": -5.86,
-    "priceChange1w": -14.49,
-    "websiteUrl": "http://www.bitcoin.org",
-    "twitterUrl": "https://twitter.com/bitcoin",
-    "exp": [
-      "https://blockchair.com/bitcoin/",
-      "https://btc.com/",
-      "https://btc.tokenview.io/"
-    ]
-  },
-
-]
+import { CoinStats } from './constants';
 
 const mockups_trade = [
   { currency: 'BTC', exchange: 'Pancakeswap' },
@@ -160,23 +17,31 @@ const App = () => {
   const options = [
     'USD', 'HKD', 'KRW', 'SGD'
   ];
-
   const defaultOption = options[0];
 
-  const [currencies, setCurrnecies] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
   const [selectValue, setSelectValue] = useState(defaultOption);
   const [trade, setTrade] = useState([]);
 
   useEffect(() => {
-    setCurrnecies(mockups_currencies);
-  }, [currencies]);
+    fetch(`${CoinStats}?currency=${selectValue}`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setCurrencies(result.coins);
+        },
+        (error) => {
+          console.log('error: ', error);
+        }
+      )
+  }, [selectValue]);
 
   useEffect(() => {
     setTrade(mockups_trade);
   }, [selectValue]);
 
   const handleOrderbyName = () => {
-    mockups_currencies.sort((a, b) => {
+    currencies.sort((a, b) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA < nameB) {
@@ -188,12 +53,13 @@ const App = () => {
 
       return 0;
     });
-    setCurrnecies([...mockups_currencies]);
+
+    setCurrencies([...currencies]);
   }
 
   const handleOrderbyRanking = () => {
-    mockups_currencies.sort((a, b) => a.rank - b.rank);
-    setCurrnecies([...mockups_currencies]);
+    currencies.sort((a, b) => a.rank - b.rank);
+    setCurrencies([...currencies]);
   }
 
   return (
