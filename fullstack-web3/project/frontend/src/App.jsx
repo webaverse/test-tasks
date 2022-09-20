@@ -1,16 +1,11 @@
+import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import Dropdown from 'react-dropdown';
+import Skeleton from "react-loading-skeleton";
 import 'react-dropdown/style.css';
+import 'react-loading-skeleton/dist/skeleton.css'
 import List from './components/List';
-import { CoinStats } from './constants';
-
-const mockups_trade = [
-  { currency: 'BTC', exchange: 'Pancakeswap' },
-  { currency: 'ETH', exchange: 'Uniswap' },
-  { currency: 'AVX', exchange: 'Biswap' },
-  { currency: 'BNB', exchange: 'Pancakeswap' },
-  { currency: 'SOL', exchange: 'Solswap' },
-];
+import { CoinStats, baseURL } from './constants';
 
 const App = () => {
 
@@ -21,23 +16,51 @@ const App = () => {
 
   const [currencies, setCurrencies] = useState([]);
   const [selectValue, setSelectValue] = useState(defaultOption);
-  const [trade, setTrade] = useState([]);
+  const [exchanges, setExchanges] = useState([]);
+
+  let fetchedData = new Array();
+
+  useEffect(() => {
+    fetch(`${CoinStats}?currency=USD`)
+      .then(res => {
+        if (res.ok) {
+          return res.json()
+        }
+        throw res;
+      })
+      .then((data) => {
+        setCurrencies(data.coins);
+      },
+      ).catch((error) => {
+        console.log(error);
+      })
+  }, []);
 
   useEffect(() => {
     fetch(`${CoinStats}?currency=${selectValue}`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setCurrencies(result.coins);
-        },
-        (error) => {
-          console.log('error: ', error);
+      .then(res => {
+        if (res.ok) {
+          return res.json()
         }
-      )
-  }, [selectValue]);
-
-  useEffect(() => {
-    setTrade(mockups_trade);
+        throw res;
+      })
+      .then(
+        async (data) => {
+          fetchedData = [];
+          console.log("current:", data.coins);
+          for await (const currency of data.coins) {
+            try {
+              const response = await axios.get(`${baseURL}?coinId=${currency.id}&symbol=${currency.symbol}&currency=${selectValue}`);
+              fetchedData.push(response.data);
+            } catch (e) {
+              console.log('axios error: ', e);
+            }
+          }
+          setExchanges(fetchedData);
+        },
+      ).catch((error) => {
+        console.log(error);
+      })
   }, [selectValue]);
 
   const handleOrderbyName = () => {
@@ -84,7 +107,11 @@ const App = () => {
         </div>
       </div>
       <div className='mt-10'>
-        <List trade={trade} />
+        {
+          exchanges.length >= 1 ?
+            <List trade={exchanges} /> :
+            <Skeleton width={384} height={384} />
+        }
       </div>
     </div>
   )
