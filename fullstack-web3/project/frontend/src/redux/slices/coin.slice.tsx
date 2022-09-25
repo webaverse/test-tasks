@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ICOIN {
-  id?: string;
-  icon?: string;
-  name?: string;
-  symbol?: string;
+  id: string;
+  icon: string;
+  name: string;
+  symbol: string;
   decimals?: number;
-  rank?: number;
+  rank: number;
   price?: number;
   priceBtc?: number;
   volume?: number;
@@ -66,6 +66,9 @@ const coinSlice = createSlice({
       state.gettingCoinsByCurrency = false;
       state.gotCoinsByCurrency = false;
     },
+    sortCoinsByAny(state, action) {
+      state.coins.sort(action.payload.func);
+    },
   },
 });
 
@@ -76,6 +79,7 @@ export const {
   getCoinsByCurrency,
   getCoinsByCurrencySuccess,
   getCoinsByCurrencyError,
+  sortCoinsByAny,
 } = coinSlice.actions;
 
 export default coinSlice.reducer;

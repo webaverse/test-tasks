@@ -1,5 +1,5 @@
 //node_modules
-import React, { useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
@@ -10,11 +10,12 @@ import { RootState } from "../../redux/store.js";
 import {
   getCoins,
   getCoinsByCurrency,
+  sortCoinsByAny,
   ICOIN,
 } from "../../redux/slices/coin.slice";
 
 //style
-import { DashboardContainer, IconImg } from "./style";
+import { DashboardContainer, IconImg, Button, SettingContainer } from "./style";
 
 const currency = [
   { value: "USD", label: "USD" },
@@ -25,6 +26,8 @@ const currency = [
 
 const DashboardComponent = () => {
   const dispatch = useDispatch();
+  const [filter, SetFilter] = useState<boolean>(false);
+
   const { coins } = useSelector((state: RootState) => state.coin);
 
   const getAllNFTs = useCallback(async () => {
@@ -44,15 +47,57 @@ const DashboardComponent = () => {
     }
   };
 
+  function SortByName(x: ICOIN, y: ICOIN) {
+    if (filter) {
+      return x.name.toLocaleUpperCase() === y.name.toLocaleUpperCase()
+        ? 0
+        : x.name.toLocaleUpperCase() > y.name.toLocaleUpperCase()
+        ? 1
+        : -1;
+    } else {
+      return x.name.toLocaleUpperCase() === y.name.toLocaleUpperCase()
+        ? 0
+        : x.name.toLocaleUpperCase() > y.name.toLocaleUpperCase()
+        ? -1
+        : 1;
+    }
+  }
+
+  function SortByRank(x: ICOIN, y: ICOIN) {
+    if (filter) {
+      return x.rank === y.rank ? 0 : x.rank > y.rank ? 1 : -1;
+    } else {
+      return x.rank === y.rank ? 0 : x.rank > y.rank ? -1 : 1;
+    }
+  }
+
+  const filterOption = async (order: string) => {
+    switch (order) {
+      case "rank":
+        dispatch(sortCoinsByAny({ func: SortByRank }));
+        break;
+      case "name":
+        dispatch(sortCoinsByAny({ func: SortByName }));
+        break;
+    }
+    SetFilter(!filter);
+  };
+
   return (
     <DashboardContainer>
-      <Select
-        className="basic-single"
-        classNamePrefix="select"
-        options={currency}
-        isClearable={true}
-        onChange={onSelectCurrency}
-      />
+      <SettingContainer>
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          options={currency}
+          isClearable={true}
+          onChange={onSelectCurrency}
+        />
+
+        <Button onClick={() => filterOption("rank")}>filter by rank</Button>
+        <Button onClick={() => filterOption("name")}>filter by name</Button>
+      </SettingContainer>
+
       <table>
         <thead>
           <tr>

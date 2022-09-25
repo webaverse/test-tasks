@@ -28,7 +28,7 @@ export function* getCoinsByCurrencySaga(action: any): any {
     );
 
     if (data) {
-      console.log("coins: ", data.coins);
+      // console.log("coins: ", data.coins);
       yield put(getCoinsByCurrencySuccess(data.coins));
     }
   } catch (error) {
