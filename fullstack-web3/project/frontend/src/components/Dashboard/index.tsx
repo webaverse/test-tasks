@@ -1,15 +1,27 @@
 //node_modules
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
 
 //store
 import { RootState } from "../../redux/store.js";
 
 //slice
-import { getCoins, ICOIN } from "../../redux/slices/coin.slice";
+import {
+  getCoins,
+  getCoinsByCurrency,
+  ICOIN,
+} from "../../redux/slices/coin.slice";
 
 //style
 import { DashboardContainer, IconImg } from "./style";
+
+const currency = [
+  { value: "USD", label: "USD" },
+  { value: "HKD", label: "HKD" },
+  { value: "KRW", label: "KRW" },
+  { value: "SGD", label: "SGD" },
+];
 
 const DashboardComponent = () => {
   const dispatch = useDispatch();
@@ -23,8 +35,24 @@ const DashboardComponent = () => {
     getAllNFTs();
   }, [getAllNFTs]);
 
+  const onSelectCurrency = async (e: any) => {
+    if (e) {
+      console.log(e.value);
+      dispatch(getCoinsByCurrency({ currency: e.value }));
+    } else {
+      dispatch(getCoins({}));
+    }
+  };
+
   return (
     <DashboardContainer>
+      <Select
+        className="basic-single"
+        classNamePrefix="select"
+        options={currency}
+        isClearable={true}
+        onChange={onSelectCurrency}
+      />
       <table>
         <thead>
           <tr>

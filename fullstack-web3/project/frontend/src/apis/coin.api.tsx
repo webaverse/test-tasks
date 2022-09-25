@@ -14,4 +14,14 @@ export const coinApi = {
       throw err;
     }
   },
+
+  async getCoinsByCurrency(currency: string) {
+    try {
+      const res = await coinStatsClient.get(`/coins?currency=${currency}`);
+      const resBody = res.data;
+      return resBody;
+    } catch (err) {
+      throw err;
+    }
+  },
 };

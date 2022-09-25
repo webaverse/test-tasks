@@ -2,14 +2,15 @@
 import { all, takeLatest } from "redux-saga/effects";
 
 //sagas
-import { getCoinsSaga } from "./coin.saga";
+import { getCoinsSaga, getCoinsByCurrencySaga } from "./coin.saga";
 
 //slices
-import { getCoins } from "../slices/coin.slice";
+import { getCoins, getCoinsByCurrency } from "../slices/coin.slice";
 
 //sagas
 function* rootSaga() {
   yield all([takeLatest(getCoins.type, getCoinsSaga)]);
+  yield all([takeLatest(getCoinsByCurrency.type, getCoinsByCurrencySaga)]);
 }
 
 export default rootSaga;

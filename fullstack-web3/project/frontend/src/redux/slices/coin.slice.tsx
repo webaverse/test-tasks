@@ -29,6 +29,8 @@ const coinSlice = createSlice({
     coin: {} as ICOIN,
     gettingCoins: false,
     gotCoins: false,
+    gettingCoinsByCurrency: false,
+    gotCoinsByCurrency: false,
   },
   reducers: {
     /**
@@ -47,9 +49,33 @@ const coinSlice = createSlice({
       state.gettingCoins = false;
       state.gotCoins = false;
     },
+
+    /**
+     * get Coins by currency
+     */
+    getCoinsByCurrency(state, action) {
+      state.gettingCoinsByCurrency = true;
+      state.gotCoinsByCurrency = false;
+    },
+    getCoinsByCurrencySuccess(state, action) {
+      state.gettingCoinsByCurrency = false;
+      state.gotCoinsByCurrency = true;
+      state.coins = action.payload;
+    },
+    getCoinsByCurrencyError(state, action) {
+      state.gettingCoinsByCurrency = false;
+      state.gotCoinsByCurrency = false;
+    },
   },
 });
 
-export const { getCoins, getCoinsSuccess, getCoinsError } = coinSlice.actions;
+export const {
+  getCoins,
+  getCoinsSuccess,
+  getCoinsError,
+  getCoinsByCurrency,
+  getCoinsByCurrencySuccess,
+  getCoinsByCurrencyError,
+} = coinSlice.actions;
 
 export default coinSlice.reducer;
