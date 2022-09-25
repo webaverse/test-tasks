@@ -109,6 +109,7 @@ const DashboardComponent = () => {
             <td>price</td>
             <td>totalSupply</td>
             <td>priceBtc</td>
+            <td>Exchange</td>
           </tr>
         </thead>
         <tbody>
@@ -124,6 +125,7 @@ const DashboardComponent = () => {
               <td>{item.price}</td>
               <td>{item.totalSupply}</td>
               <td>{item.priceBtc}</td>
+              <td></td>
             </tr>
           ))}
         </tbody>
