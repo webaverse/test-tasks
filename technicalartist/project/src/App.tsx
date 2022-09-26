@@ -10,6 +10,7 @@ export default function App() {
       <Canvas
         camera={{ position: cameraPosition, far: 10000, near: 1 }}
         gl={{ antialias: false }}
+        shadows
       >
         <OrbitControls
           enablePan={false}
