@@ -36,6 +36,7 @@ const DashboardComponent = () => {
 
   const getAllNFTs = useCallback(() => {
     dispatch(getCoins({}));
+    dispatch(getCoins({}));
   }, [dispatch]);
 
   useEffect(() => {
@@ -88,6 +89,7 @@ const DashboardComponent = () => {
   }
 
   const filterOption = async (order: string) => {
+    console.log("order", order);
     switch (order) {
       case "rank":
         dispatch(sortCoinsByAny({ func: SortByRank }));
@@ -130,7 +132,7 @@ const DashboardComponent = () => {
         </thead>
         <tbody>
           {coins.map((item: ICOIN, index: number) => (
-            <tr key={index}>
+            <tr key={index} data-testid="coin-row">
               <td>{item.rank}</td>
               <td>
                 <IconImg src={item.icon} alt="Icon" />

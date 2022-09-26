@@ -17,7 +17,7 @@ export function* getCoinsSaga(action: PayloadAction<{}>): any {
     const data = yield call(coinApi.getCoins);
 
     if (data) {
-      yield put(getCoinsSuccess(data.coins));
+      yield put(getCoinsSuccess(data));
     }
   } catch (error) {
     yield put(getCoinsError(error));
@@ -56,7 +56,7 @@ export function* getExchangeSaga(
     if (data) {
       yield put(
         getExchangeSuccess({
-          index: action.payload.coin.index,
+          index: action.payload.coin.index as number,
           exchange: data.exchange,
         })
       );
