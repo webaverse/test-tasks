@@ -42,7 +42,6 @@ const getMiniCurrency = async (req, res, next) => {
           exchanges.sort((a, b) => a.price - b.price);
 
           let coin = { coinId: value[i].id, exchange: exchanges[0] ? exchanges[0].exchange : exchanges[0] };
-          console.log(coin);
           data.push(coin);
         }
       });

@@ -24,29 +24,45 @@ export interface ICOIN {
   exchange?: string;
 }
 
+type exchangeState = {
+  coins: ICOIN[];
+  coin: ICOIN;
+  gettingCoins: boolean;
+  gotCoins: boolean;
+  gettingCoinsByCurrency: boolean;
+  gotCoinsByCurrency: boolean;
+  gettingExchange: boolean;
+  gotExchange: boolean;
+  error: object;
+};
+
+const initialState: exchangeState = {
+  coins: [] as ICOIN[],
+  coin: {} as ICOIN,
+  gettingCoins: false,
+  gotCoins: false,
+  gettingCoinsByCurrency: false,
+  gotCoinsByCurrency: false,
+  gettingExchange: false,
+  gotExchange: false,
+
+  error: {},
+};
 const coinSlice = createSlice({
   name: "coins",
-  initialState: {
-    coins: [] as ICOIN[],
-    coin: {} as ICOIN,
-    gettingCoins: false,
-    gotCoins: false,
-    gettingCoinsByCurrency: false,
-    gotCoinsByCurrency: false,
-    gettingExchange: false,
-    gotExchange: false,
-
-    error: {},
-  },
+  initialState: initialState,
   reducers: {
     /**
      * get Coins
      */
-    getCoins(state, action: PayloadAction<{}>) {
+    getCoins(state: exchangeState, action: PayloadAction<{}>) {
       state.gettingCoins = true;
       state.gotCoins = false;
     },
-    getCoinsSuccess(state, action: PayloadAction<{ coins: ICOIN[] }>) {
+    getCoinsSuccess(
+      state: exchangeState,
+      action: PayloadAction<{ coins: ICOIN[] }>
+    ) {
       state.gettingCoins = false;
       state.gotCoins = true;
       state.coins = action.payload.coins.map((coin: ICOIN, index: number) => ({
@@ -54,7 +70,7 @@ const coinSlice = createSlice({
         ...coin,
       }));
     },
-    getCoinsError(state, action) {
+    getCoinsError(state: exchangeState, action) {
       state.gettingCoins = false;
       state.gotCoins = false;
       state.error = action.payload;
@@ -63,19 +79,19 @@ const coinSlice = createSlice({
     /**
      * get Coins by currency
      */
-    getCoinsByCurrency(state, action: PayloadAction<{}>) {
+    getCoinsByCurrency(state: exchangeState, action: PayloadAction<{}>) {
       state.gettingCoinsByCurrency = true;
       state.gotCoinsByCurrency = false;
     },
     getCoinsByCurrencySuccess(
-      state,
+      state: exchangeState,
       action: PayloadAction<{ coins: ICOIN[] }>
     ) {
       state.gettingCoinsByCurrency = false;
       state.gotCoinsByCurrency = true;
       state.coins = action.payload.coins;
     },
-    getCoinsByCurrencyError(state, action) {
+    getCoinsByCurrencyError(state: exchangeState, action) {
       state.gettingCoinsByCurrency = false;
       state.gotCoinsByCurrency = false;
       state.error = action.payload;
@@ -84,24 +100,24 @@ const coinSlice = createSlice({
     /**
      * get cryptocurrency exchange
      */
-    getExchange(state, action) {
+    getExchange(state: exchangeState, action) {
       state.gettingExchange = true;
       state.gotExchange = false;
     },
     getExchangeSuccess(
-      state,
+      state: exchangeState,
       action: PayloadAction<{ index: number; exchange: string }>
     ) {
       state.gettingExchange = false;
       state.gotExchange = true;
       state.coins[action.payload.index].exchange = action.payload.exchange;
     },
-    getExchangeError(state, action) {
+    getExchangeError(state: exchangeState, action) {
       state.gettingExchange = false;
       state.gotExchange = false;
       state.error = action.payload;
     },
-    sortCoinsByAny(state, action) {
+    sortCoinsByAny(state: exchangeState, action) {
       state.coins.sort(action.payload.func);
     },
   },
