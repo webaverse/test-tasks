@@ -12,6 +12,7 @@ import {
   getCoinsByCurrency,
   sortCoinsByAny,
   ICOIN,
+  getExchange,
 } from "../../redux/slices/coin.slice";
 
 //style
@@ -27,10 +28,13 @@ const currency = [
 const DashboardComponent = () => {
   const dispatch = useDispatch();
   const [filter, SetFilter] = useState<boolean>(false);
+  const [currentCurrency, SetCurrentCurrency] = useState<string>("USD");
 
-  const { coins } = useSelector((state: RootState) => state.coin);
+  const { coins, gotCoins, gotCoinsByCurrency } = useSelector(
+    (state: RootState) => state.coin
+  );
 
-  const getAllNFTs = useCallback(async () => {
+  const getAllNFTs = useCallback(() => {
     dispatch(getCoins({}));
   }, [dispatch]);
 
@@ -38,14 +42,26 @@ const DashboardComponent = () => {
     getAllNFTs();
   }, [getAllNFTs]);
 
-  const onSelectCurrency = async (e: any) => {
-    if (e) {
-      console.log(e.value);
-      dispatch(getCoinsByCurrency({ currency: e.value }));
-    } else {
-      dispatch(getCoins({}));
+  useEffect(() => {
+    if (gotCoins || gotCoinsByCurrency) {
+      console.log("OK");
+      coins.forEach((coin: ICOIN) => {
+        dispatch(getExchange({ coin: coin, currency: currentCurrency }));
+      });
     }
-  };
+  }, [gotCoins, gotCoinsByCurrency, currentCurrency, dispatch]);
+
+  const onSelectCurrency = useCallback(
+    (e: any) => {
+      if (e) {
+        SetCurrentCurrency(e.value);
+        dispatch(getCoinsByCurrency({ currency: e.value }));
+      } else {
+        dispatch(getCoins({}));
+      }
+    },
+    [dispatch, SetCurrentCurrency]
+  );
 
   function SortByName(x: ICOIN, y: ICOIN) {
     if (filter) {
@@ -125,7 +141,7 @@ const DashboardComponent = () => {
               <td>{item.price}</td>
               <td>{item.totalSupply}</td>
               <td>{item.priceBtc}</td>
-              <td></td>
+              <td>{item.exchange}</td>
             </tr>
           ))}
         </tbody>

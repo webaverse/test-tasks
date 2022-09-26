@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ICOIN {
+  index?: number;
   id: string;
   icon: string;
   name: string;
@@ -20,6 +21,7 @@ export interface ICOIN {
   websiteUrl?: string;
   twitterUrl?: string;
   exp?: any;
+  exchange?: string;
 }
 
 const coinSlice = createSlice({
@@ -31,6 +33,8 @@ const coinSlice = createSlice({
     gotCoins: false,
     gettingCoinsByCurrency: false,
     gotCoinsByCurrency: false,
+    gettingExchange: false,
+    gotExchange: false,
   },
   reducers: {
     /**
@@ -43,7 +47,10 @@ const coinSlice = createSlice({
     getCoinsSuccess(state, action) {
       state.gettingCoins = false;
       state.gotCoins = true;
-      state.coins = action.payload;
+      state.coins = action.payload.map((coin: ICOIN, index: number) => ({
+        index,
+        ...coin,
+      }));
     },
     getCoinsError(state, action) {
       state.gettingCoins = false;
@@ -66,6 +73,23 @@ const coinSlice = createSlice({
       state.gettingCoinsByCurrency = false;
       state.gotCoinsByCurrency = false;
     },
+
+    /**
+     * get cryptocurrency exchange
+     */
+    getExchange(state, action) {
+      state.gettingExchange = true;
+      state.gotExchange = false;
+    },
+    getExchangeSuccess(state, action) {
+      state.gettingExchange = false;
+      state.gotExchange = true;
+      state.coins[action.payload.index].exchange = action.payload.exchange;
+    },
+    getExchangeError(state, action) {
+      state.gettingExchange = false;
+      state.gotExchange = false;
+    },
     sortCoinsByAny(state, action) {
       state.coins.sort(action.payload.func);
     },
@@ -80,6 +104,9 @@ export const {
   getCoinsByCurrencySuccess,
   getCoinsByCurrencyError,
   sortCoinsByAny,
+  getExchange,
+  getExchangeSuccess,
+  getExchangeError,
 } = coinSlice.actions;
 
 export default coinSlice.reducer;

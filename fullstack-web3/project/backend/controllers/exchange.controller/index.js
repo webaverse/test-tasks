@@ -19,10 +19,15 @@ const getMiniCurrency = async (req, res, next) => {
     if (coinId) {
       const result = await ExchangeService.getCoinsByCurrency(coinId, currency);
 
-      let exchanges = result.filter(item => item.pair == `${symbol}/USD` || item.pair == `USD/${symbol}`);
-      exchanges.sort((e1, e2) => e1.price - e2.price);
+      let exchanges = result.filter(item => item.pair == `${symbol}/USD` || item.pair == `${symbol}/USDT`);
+      if (exchanges.length !== 0) {
+        exchanges.sort((e1, e2) => e1.price - e2.price);
+      } else {
+        exchanges = result;
+        exchanges.sort((e1, e2) => e1.price - e2.price);
+      }
 
-      RESPONSE(res, 200, { exchange: exchanges }, "Get Currency successfully");
+      RESPONSE(res, 200, { exchange: exchanges[0] ? exchanges[0].exchange : "" }, "Get Currency successfully");
     } else {
       let data = [];
       const result = await ExchangeService.getCoins(currency);
@@ -36,7 +41,6 @@ const getMiniCurrency = async (req, res, next) => {
           exchanges.sort((a, b) => a.price - b.price);
 
           let coin = { coinId: value[i].id, exchange: exchanges[0] ? exchanges[0].exchange : exchanges[0] };
-          console.log(coin)
           data.push(coin);
         }
 
