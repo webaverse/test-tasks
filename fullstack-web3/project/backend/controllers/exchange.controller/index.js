@@ -12,9 +12,10 @@ const { errorHandler, RESPONSE } = require("../../utils");
 
 const getMiniCurrency = async (req, res, next) => {
   try {
+
     const { coinId, currency, symbol, ...rest } = req.query;
 
-    if (!currency) errorHandler(res, ERRORS.BAD_REQUEST.code);
+    if (!currency) { errorHandler(res, ERRORS.BAD_REQUEST.code); return };
 
     if (coinId) {
       const result = await ExchangeService.getCoinsByCurrency(coinId, currency);
@@ -41,9 +42,9 @@ const getMiniCurrency = async (req, res, next) => {
           exchanges.sort((a, b) => a.price - b.price);
 
           let coin = { coinId: value[i].id, exchange: exchanges[0] ? exchanges[0].exchange : exchanges[0] };
+          console.log(coin);
           data.push(coin);
         }
-
       });
 
       RESPONSE(res, 200, { Allexchange: data }, "Get Currency successfully");
