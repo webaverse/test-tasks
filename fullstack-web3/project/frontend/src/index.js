@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import DataTable from "react-data-table-component";
 import Card from "@material-ui/core/Card";
-import { Select } from "@material-ui/core";
-import { ListItem } from "@material-ui/core";
+import { Select, ListItem, CircularProgress } from "@material-ui/core";
 import SortIcon from "@material-ui/icons/ArrowDownward";
 import axios from "axios";
 
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const server_url = process.env.SERVER_URL || "http://localhost:4000";
+
 function App() {
   const [currency, setCurrency] = useState("HKD");
   const [coins, setCoins] = useState([]);
-  
+  const [pending, setPending] = useState(false);
+
   //Set columns for datatable
   const columns = [
     {
@@ -48,11 +50,11 @@ function App() {
     },
     {
       name: "Exchange",
-      selector: "rank",
+      selector: "exchange",
     },
   ];
 
-  //function for handling currency 
+  //function for handling currency
   const handleCurrency = (e) => {
     setCurrency(e.target.value);
   };
@@ -63,18 +65,30 @@ function App() {
       .get("https://api.coinstats.app/public/v1/coins?currency=" + currency)
       .then((res) => {
         let data = res.data.coins;
-        data.map((item, index) => {
-          axios
-            .get(
-              "http://localhost:4000/exchange?coinId=bitcoin&coinSymbol=BTC&currency=" +
-                currency
-            )
-            .then((res) => {
-              let exchange = res.data.exchange;
-              item.exchange = exchange;
-            });
-        });
-        setCoins(data);
+        setPending(true);
+
+        return Promise.all(
+          data.map((item) =>
+            axios
+              .get(
+                server_url +
+                  "/exchange?coinId=" +
+                  item.id +
+                  "&coinSymbol=" +
+                  item.symbol +
+                  "&currency=" +
+                  currency
+              )
+              .then((res) => ({
+                ...item,
+                exchange: res.data.exchange,
+              }))
+          )
+        );
+      })
+      .then((values) => {
+        setPending(false);
+        setCoins(values);
       });
   };
 
@@ -86,7 +100,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <label>Currency:&nbsp;&nbsp;&nbsp; </label>
+        <label>Currency Type:&nbsp;&nbsp;&nbsp; </label>
         <Select
           title="Currency"
           value={currency}
@@ -108,6 +122,7 @@ function App() {
           sortIcon={<SortIcon />}
           pagination
           selectableRows
+          progressPending={pending}
         />
       </Card>
     </div>
