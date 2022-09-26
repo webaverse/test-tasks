@@ -1,19 +1,26 @@
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { CameraControls } from "./CameraControls";
 import { Scene } from "./Scene";
+import { OrbitControls } from "@react-three/drei";
 
 export default function App() {
-  const cameraPosition: [number, number, number] = [2000, 1000, 0];
+  const cameraPosition: [number, number, number] = [-270, 185, -375];
   return (
-    <Canvas
-      camera={{ position: cameraPosition, far: 10000, near: 1 }}
-      gl={{ antialias: false }}
-    >
-      <CameraControls />
-      <Suspense fallback={null}>
-        <Scene />
-      </Suspense>
-    </Canvas>
+    <>
+      <Canvas
+        camera={{ position: cameraPosition, far: 10000, near: 1 }}
+        gl={{ antialias: false }}
+      >
+        <OrbitControls
+          enablePan={false}
+          enableDamping
+          maxPolarAngle={Math.PI / 2 - 0.05}
+          minPolarAngle={0}
+        />
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+      </Canvas>
+    </>
   );
 }
