@@ -38,31 +38,33 @@ export const Scene = () => {
       env,
       shadows,
       sun,
+      flatShading,
     },
     set,
   ] = useControls(() => ({
-    preset: {
-      value: "amazonia",
-      options: ["amazonia", "antarctica", "namek"],
-      onChange: (value) => {
-        switch (value) {
-          case "amazonia":
-            set({ liquid: "#765a2b", rock: "#414141", ground: "#215400" });
-            return;
-          case "antarctica":
-            set({ liquid: "#0a081a", rock: "#525252", ground: "#656565" });
-            return;
-          case "namek":
-            set({ liquid: "#008041", rock: "#a76c6c", ground: "#25214e" });
-            return;
-        }
-      },
-    },
     palette: folder({
+      preset: {
+        value: "amazonia",
+        options: ["amazonia", "antarctica", "namek"],
+        onChange: (value) => {
+          switch (value) {
+            case "amazonia":
+              set({ liquid: "#765a2b", rock: "#414141", ground: "#215400" });
+              return;
+            case "antarctica":
+              set({ liquid: "#0a081a", rock: "#525252", ground: "#656565" });
+              return;
+            case "namek":
+              set({ liquid: "#008041", rock: "#a76c6c", ground: "#25214e" });
+              return;
+          }
+        },
+      },
       liquid: { value: "#765a2b" },
       rock: { value: "#414141" },
       ground: { value: "#215400" },
     }),
+    flatShading: true,
     lighting: folder({
       azimuth: {
         value: -0.42,
@@ -148,6 +150,7 @@ export const Scene = () => {
           attach="material"
           envMapIntensity={env}
           metalness={0}
+          flatShading={flatShading}
           uniforms={{
             uTime: { value: 0 },
             liquidColor: { value: new Color() },
