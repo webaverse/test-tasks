@@ -4,9 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test Task</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #root {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
+      canvas {
+        cursor: grab;
+      }
+      canvas:active {
+        cursor: grabbing;
+      }
+    </style>
   </head>
-  <body style="margin: 0;">
+  <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
