@@ -2,6 +2,7 @@
 // Game name: BallJumper
 
 var scene = new THREE.Scene();
+var highestScore;
 
 // setting up renderer
 var renderer = new THREE.WebGLRenderer();
@@ -417,15 +418,15 @@ window.onload = init;
 
 function init(){
     var fpsOut = document.getElementById('fps');
-setInterval(function(){
-  fpsOut.innerHTML = (1000/frameTime).toFixed(1) + " fps";
-  document.getElementById('fps').innerHTML = "Frame Rate: " + (1000/frameTime).toFixed(1) + " fps";
+      setInterval(function(){
+        fpsOut.innerHTML = (1000/frameTime).toFixed(1) + " fps";
+        document.getElementById('fps').innerHTML = "Frame Rate: " + (1000/frameTime).toFixed(1) + " fps";
 
-	highestScore = Math.max(highestScore, player.position.y); 
-  document.getElementById('highest').innerHTML = "Best Height: " + highestScore.toFixed(1);
+        highestScore = Math.max(highestScore, player.position.y);
+        document.getElementById('highest').innerHTML = "Best Height: " + highestScore.toFixed(1);
 
-  document.getElementById('current').innerHTML = "Current Height: " + player.position.y.toFixed(1);
-},100);
+        document.getElementById('current').innerHTML = "Current Height: " + player.position.y.toFixed(1);
+      }, 100);
   }
      
 })(window, document, undefined);

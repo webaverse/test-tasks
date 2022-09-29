@@ -10,8 +10,10 @@ THREE.PlatformMesh = function (geometry, material) {
 	this.clock = new THREE.Clock(true);
 
 	//determine velocity
-	if (allObstacles.length <= 5) {
+	if (allObstacles.length < 5) {
 		this.velocity = 0.35;
+  } else if (allObstacles.length <= 8) {
+    this.velocity = 0;
 	} else if (allObstacles.length <= 10) {
 		this.velocity = (Math.random() * 0.25) + 0.25;
 	} else if (allObstacles.length <= 15) {
@@ -70,26 +72,34 @@ function moveAllPlatforms() {
 // generates position of the new platform using the current highest platform
 function newPlatformPosition() {
   //position of the highest platform
-  var platPos = allObstacles[allObstacles.length-1].position;
-
-  var radius = Math.random()*100 + 50;
-  var angle1 = Math.random()*2*Math.PI;
-
-  var x = radius * Math.cos(angle1);
-  var z = radius * Math.sin(angle1);
-
-  var y;
-  if (radius > 160) {
-    y = Math.random()* 50 + 75 + platPos.y;
-  } else if (radius > 120){
-    y = Math.random()* 40 + 100 + platPos.y;
-  } else if (radius > 75) {
-    y = Math.random()* 60 + 100 + platPos.y;
+  if (allObstacles.length == 8) {
+    x = -96;
+    y = 291;
+    z = 23;
+    return new THREE.Vector3(x,y,z);
   } else {
-    y = Math.random()* 45 + 125 + platPos.y; 
+    var platPos = allObstacles[allObstacles.length-1].position;
+
+    var radius = Math.random()*100 + 50;
+    var angle1 = Math.random()*2*Math.PI;
+  
+    var x = radius * Math.cos(angle1);
+    var z = radius * Math.sin(angle1);
+  
+    var y;
+    if (radius > 160) {
+      y = Math.random()* 50 + 75 + platPos.y;
+    } else if (radius > 120){
+      y = Math.random()* 40 + 100 + platPos.y;
+    } else if (radius > 75) {
+      y = Math.random()* 60 + 100 + platPos.y;
+    } else {
+      y = Math.random()* 45 + 125 + platPos.y; 
+    }
+  
+    return new THREE.Vector3(x,y,z);
   }
 
-  return new THREE.Vector3(x,y,z);
 }
 
 //add new platform when player reaches the highest platform
