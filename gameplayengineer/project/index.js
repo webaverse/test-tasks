@@ -6,12 +6,13 @@ import puppeteer from 'puppeteer';
 import chai from 'chai' 
 var expect = chai.expect;  
 
-let temp = 19;
+let score = 0;
 let positionX = 0;
 let positionY = 0;
 let positionZ = 0;
-
-
+let jumpCount = 0;
+let lastJump = 0;
+const timeLimit = 1000;
 
 const browser = await puppeteer.launch({
     headless: true,
@@ -69,32 +70,30 @@ class CoverageExtension extends PuppeteerRunnerExtension {
 
     async beforeEachStep(step, flow) {
       await super.beforeEachStep(step, flow);
-      const posX = await page.$("#positionX")
-      const textX = await (await posX.getProperty('textContent')).jsonValue()
+      const posXElement = await page.$("#positionX")
+      const textX = await (await posXElement.getProperty('textContent')).jsonValue()
       positionX = parseFloat(textX.split(" ").pop());
 
-      const posZ = await page.$("#positionZ")
-      const textZ = await (await posZ.getProperty('textContent')).jsonValue()
+      const posZElement = await page.$("#positionZ")
+      const textZ = await (await posZElement.getProperty('textContent')).jsonValue()
       positionZ = parseFloat(textZ.split(" ").pop());
 
-      const posY = await page.$("#current")
-      const textY = await (await posY.getProperty('textContent')).jsonValue()
+      const posYElement = await page.$("#current")
+      const textY = await (await posYElement.getProperty('textContent')).jsonValue()
       positionY = parseFloat(textY.split(" ").pop());
-
-      console.log("posx, posZ is", positionX, positionZ)
-
+      console.log("posXElement, posZElement is", positionX, positionZ)
       console.log('before', step);
     }
     
     async afterEachStep(step, flow) {
       await super.afterEachStep(step, flow);    
 
-      const posX = await page.$("#positionX")
-      const textX = await (await posX.getProperty('textContent')).jsonValue()
+      const posXElement = await page.$("#positionX")
+      const textX = await (await posXElement.getProperty('textContent')).jsonValue()
       const positionXAfter = parseFloat(textX.split(" ").pop());
 
-      const posZ = await page.$("#positionZ")
-      const textZ = await (await posZ.getProperty('textContent')).jsonValue()
+      const posZElement = await page.$("#positionZ")
+      const textZ = await (await posZElement.getProperty('textContent')).jsonValue()
       const positionZAfter = parseFloat(textZ.split(" ").pop());
 
       console.log("positionXAfter, positionZAfter is", positionXAfter, positionZAfter)
@@ -103,45 +102,73 @@ class CoverageExtension extends PuppeteerRunnerExtension {
       const text = await (await f.getProperty('textContent')).jsonValue()
       const highest = parseFloat(text.split(" ").pop());
 
-      const posY = await page.$("#current")
-      const textY = await (await posY.getProperty('textContent')).jsonValue()
+      const posYElement = await page.$("#current")
+      const textY = await (await posYElement.getProperty('textContent')).jsonValue()
       const positionYAfter = parseFloat(textY.split(" ").pop());
       
       if ((step.type == 'keyUp') && (step.key == 'w')) {
           console.log("w key was succesfully inputed");
-          expect(positionZ).to.be.greaterThan(positionZAfter)
+          try {
+            expect(positionZ).to.be.greaterThan(positionZAfter)
+           } catch (e) { 
+            console.log ("w key not inputed")
+          }
       }
 
       if ((step.type == 'keyUp') && (step.key == 's')) {
           console.log("s key was succesfully inputed");
-          expect(positionZAfter).to.be.greaterThan(positionZ)
+          try { 
+            expect(positionZAfter).to.be.greaterThan(positionZ)
+          } catch (e) { 
+            console.log ("s key not inputed")
+          }
       }
 
       if ((step.type == 'keyUp') && (step.key == 'a')) {
           console.log("a key was succesfully inputed");
-          expect(positionX).to.be.greaterThan(positionXAfter)
+          try { 
+            expect(positionX).to.be.greaterThan(positionXAfter)
+          } catch (e) { 
+            console.log ("a key not inputed")
+          }
       }
 
       if ((step.type == 'keyUp') && (step.key == 'd')) {
         console.log("d key was succesfully inputed");
-        expect(positionXAfter).to.be.greaterThan(positionX)
-      }
-
-      if ((step.type == 'keyUp') && (step.key == ' ')) {
-        console.log("Space key was succesfully inputed");
-        expect(positionYAfter).to.be.greaterThan(positionY)
-
-        if ((highest - positionY) > 150) {
-          console.log("Double Jump emitted!");
+        try {
+          expect(positionXAfter).to.be.greaterThan(positionX)
+        } catch (e) { 
+          console.log ("d key not inputed")
         }
-      }
-
-      console.log("current height is: ", highest)
-      if (highest > temp) {
-        await page.screenshot({ path: `./testOutputs/{${highest}}.png` });
       }      
 
-      temp = highest; 
+      if ((Date.now()-lastJump) > timeLimit) {
+        jumpCount = 0;
+      }
+
+      if ((step.type == 'keyDown') && (step.key == ' ')) {
+        console.log("Space key was succesfully inputed");
+        if (jumpCount < 2)
+        {
+          try {
+            expect(positionYAfter).to.be.greaterThan(positionY)  //check first space jump
+            jumpCount ++;
+            lastJump = Date.now();
+          } catch (e) {
+            console.log("jump failed")
+          } 
+        } else{
+          console.log("Jumping is disable after double Jump.")
+        }
+         
+      }
+      console.log("current height is: ", highest)
+      if (highest > score) {
+        score = highest; 
+        await page.screenshot({ path: `./testOutputs/{${score}}.png` });
+      }
+      
+      
 
       console.log('after', step);
 
