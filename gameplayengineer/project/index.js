@@ -4,7 +4,7 @@ import pti from 'puppeteer-to-istanbul';
 import puppeteer from 'puppeteer';
 import { start } from 'repl';
 
-let i = 0
+let temp = 19;
 
 // var newHigh = typeof window !== 'undefined' ? localStorage.getItem('highest score') : 0
 
@@ -16,7 +16,11 @@ const page = await browser.newPage();
 await page.goto('https://webaverse-alan-cousin.netlify.app/')
 const f = await page.$("#highest")
 const text = await (await f.getProperty('textContent')).jsonValue()
-console.log("Text is: ", text)
+{
+  const targetPage = page;
+  await targetPage.keyboard.down(" ");
+  console.log("space pressed")
+}
 
 class CoverageExtension extends PuppeteerRunnerExtension {
 
@@ -59,13 +63,25 @@ class CoverageExtension extends PuppeteerRunnerExtension {
     async afterEachStep(step, flow) {
       await super.afterEachStep(step, flow);    
       const f = await page.$("#highest")
-        const text = await (await f.getProperty('textContent')).jsonValue()
-        console.log("Text is: ", text)
-      if (step.key == ' ' && step.type == 'keyDown') {
-        await page.screenshot({ path: `./testOutputs/screenshots${i}.png` });
-        i++;
+      const text = await (await f.getProperty('textContent')).jsonValue()
+      const highest = parseFloat(text.split(" ").pop());
+      console.log("current height is: ", highest)
+      if (highest > temp) {
+        await page.screenshot({ path: `./testOutputs/{${highest}}.png` });
       }
+      temp = highest; 
+
+      // describe('Google', () => {
+      //   beforeAll(async () => {
+      //     await page.goto('https://google.com');
+      //   });
+      
+      //   it('should be titled "Google"', async () => {
+      //     await expect(page.title()).resolves.toMatch('Google');
+      //   });
+      // })
       console.log('after', step);
+
     }
 
     async afterAllSteps(flow) {
@@ -76,275 +92,129 @@ class CoverageExtension extends PuppeteerRunnerExtension {
 }
 
 export const flow = {
-    "title": "full_test",
-    "steps": [
-      {
-        "type": "setViewport",
-        "width": 1440,
-        "height": 757,
-        "deviceScaleFactor": 1,
-        "isMobile": false,
-        "hasTouch": false,
-        "isLandscape": false
-      },
-      {
-        "type": "navigate",
-        "url": "https://webaverse-alan-cousin.netlify.app/",
-        "assertedEvents": [
-          {
-            "type": "navigation",
-            "url": "https://webaverse-alan-cousin.netlify.app/",
-            "title": "Jumping Test"
-          }
-        ]
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyUp",
-        "key": "d",
-        "target": "main"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": " "
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "s"
-      },
-      {
-        "type": "keyUp",
-        "key": " ",
-        "target": "main"
-      },
-      {
-        "type": "keyUp",
-        "key": "d",
-        "target": "main"
-      },
-      {
-        "type": "keyUp",
-        "key": "s",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyUp",
-        "key": "d",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "d"
-      },
-      {
-        "type": "keyUp",
-        "key": "d",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "a"
-      },
-      {
-        "type": "keyUp",
-        "key": "a",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "s"
-      },
-      {
-        "type": "keyUp",
-        "key": "s",
-        "target": "main"
-      },
-      {
-        "type": "keyDown",
-        "target": "main",
-        "key": "w"
-      },
-      {
-        "type": "keyUp",
-        "key": "w",
-        "target": "main"
-      }
-    ],
-    "timeout": 30000
+  "title": "1",
+  "steps": [
+    {
+      "type": "setViewport",
+      "width": 1440,
+      "height": 757,
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false,
+      "isLandscape": false
+    },
+    {
+      "type": "navigate",
+      "url": "https://webaverse-alan-cousin.netlify.app/",
+      "assertedEvents": [
+        {
+          "type": "navigation",
+          "url": "https://webaverse-alan-cousin.netlify.app/",
+          "title": "Jumping Test"
+        }
+      ]
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "d",
+    },
+    {
+      "type": "keyUp",
+      "key": "d",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "w"
+    },
+    {
+      "type": "keyUp",
+      "key": "w",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "w"
+    },
+    {
+      "type": "keyUp",
+      "key": "w",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "d"
+    },
+    {
+      "type": "keyUp",
+      "key": "d",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": " "
+    },
+    {
+      "type": "keyUp",
+      "key": " ",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "a"
+    },
+    {
+      "type": "keyUp",
+      "key": "a",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "a"
+    },
+    {
+      "type": "keyUp",
+      "key": "a",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": " "
+    },
+    {
+      "type": "keyUp",
+      "key": " ",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": " "
+    },
+    {
+      "type": "keyUp",
+      "key": " ",
+      "target": "main"
+    },
+    {
+      "type": "keyDown",
+      "target": "main",
+      "key": "a"
+    },
+    {
+      "type": "keyUp",
+      "key": "a",
+      "target": "main"
+    }
+  ]
 }
 
 export async function run(extension) {

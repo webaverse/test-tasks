@@ -426,6 +426,8 @@ function init(){
         document.getElementById('highest').innerHTML = "Best Height: " + highestScore.toFixed(1);
 
         document.getElementById('current').innerHTML = "Current Height: " + player.position.y.toFixed(1);
+        document.getElementById('positionX').innerHTML = "X Position: " + player.position.x.toFixed(1);
+        document.getElementById('positionZ').innerHTML = "Z Position: " + player.position.z.toFixed(1);
       }, 100);
   }
      
