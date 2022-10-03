@@ -1,19 +1,20 @@
 import React from 'react';
 import logo from './logo.svg';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
+import { CurrencyList } from './components/CurrencyList';
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <>
       <div className="flex">
-        <img src={logo} className="w-20" alt="logo" />
+        <img src={logo} className="w-20 m-4" alt="logo" />
       </div>
       <QueryClientProvider client={queryClient}>
-        <p className='m-8'>
-          Coins Available RN
-        </p>
+        <div className="flex flex-col justify-center">
+          <h2 className='text-sky-400 font-bold mx-auto text-xl'>Currency Info</h2>
+          <CurrencyList />
+        </div>
       </QueryClientProvider>
     </>
   );
