@@ -1,19 +1,24 @@
 
 import { CurrencyInfo } from "../hooks/UseCurrencyList"
+import { useRef } from 'react';
+import { UseOnScreen } from "../hooks/UseOnScreen";
 
 export interface CurrencyProps {
     currency: CurrencyInfo
 }
 
 function numberWithCommas(x: number) : string {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 export const Currency = (props: CurrencyProps) => {
 
+    const ref = useRef<HTMLDivElement>(null)
+    const isVisible = UseOnScreen(ref)
+
     const currency : CurrencyInfo = props.currency
     return(
-        <div className='p-2 flex items-start justify-items-start'>
+        <div ref={ref} key={currency.id + 'display'} className='p-2 flex items-start justify-items-start'>
             <div className='my-3 mx-3 md:mx-8 py-2'>
                 <a target='_none' href={currency.websiteUrl} className='block w-24'>
                     <img src={currency.icon} alt={currency.name} className='mx-auto' />
@@ -26,7 +31,7 @@ export const Currency = (props: CurrencyProps) => {
                     </a>
                 </div>
                 <div className='flex flex-col lg:flex-row flex-wrap'>
-                    <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}</div>
+                    <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}  {isVisible && `Yep, I'm on screen`}</div>
                     <div className='md:mr-6 md:my-1'>Price: {currency.fiatSymbol}{currency.price}</div>
                     <div className='md:mr-6 md:my-1'>Volume: {currency.fiatSymbol}{numberWithCommas(currency.volume)}</div>
                     <div className='md:mr-6 md:my-1'>Market Cap: {currency.fiatSymbol}{numberWithCommas(currency.marketCap)}</div>
