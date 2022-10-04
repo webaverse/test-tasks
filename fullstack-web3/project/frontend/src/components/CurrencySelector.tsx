@@ -15,7 +15,7 @@ export const CurrencySelector = (props: CurrencySelectorProps) => {
     })
 
     return (
-        <div className='my-4 mx-auto text-base'>
+        <div className='mt-6 mb-2 mx-auto text-base'>
             <label className='mx-4'>Select Fiat Currency:</label>
             <select id='fiatSelect' className='p-2 w-24 mx-auto bg-cyan-600 text-white rounded-md' value={props.currentFiat} onChange={(e) => props.setCurrentFiat(e.target.value)}>
                 {fiatOptions}
