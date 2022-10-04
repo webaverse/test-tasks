@@ -1,8 +1,12 @@
 import { UseCurrencyList } from "../hooks/UseCurrencyList";
 import { Currency } from "./Currency";
 
-export const CurrencyList = () => {
-    const currencyResults = UseCurrencyList();
+export interface CurrencyListProps {
+    fiat: string
+}
+
+export const CurrencyList = (props: CurrencyListProps) => {
+    const currencyResults = UseCurrencyList(props.fiat);
     if (currencyResults.status === 'loading') {
         return <div>Loading...</div>
     }

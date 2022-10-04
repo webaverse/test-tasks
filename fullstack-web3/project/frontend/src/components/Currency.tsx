@@ -16,7 +16,7 @@ export const Currency = (props: CurrencyProps) => {
         <div className='p-2 flex items-start justify-items-start'>
             <div className='my-3 mx-3 md:mx-8 py-2'>
                 <a target='_none' href={currency.websiteUrl} className='block w-24'>
-                    <img src={currency.icon} alt={currency.name} />
+                    <img src={currency.icon} alt={currency.name} className='mx-auto' />
                 </a>
             </div>
             <div className='m-2'>
@@ -27,9 +27,9 @@ export const Currency = (props: CurrencyProps) => {
                 </div>
                 <div className='flex flex-col lg:flex-row flex-wrap'>
                     <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}</div>
-                    <div className='md:mr-6 md:my-1'>Price: ${currency.price}</div>
-                    <div className='md:mr-6 md:my-1'>Volume: ${numberWithCommas(currency.volume)}</div>
-                    <div className='md:mr-6 md:my-1'>Market Cap: ${numberWithCommas(currency.marketCap)}</div>
+                    <div className='md:mr-6 md:my-1'>Price: {currency.fiatSymbol}{currency.price}</div>
+                    <div className='md:mr-6 md:my-1'>Volume: {currency.fiatSymbol}{numberWithCommas(currency.volume)}</div>
+                    <div className='md:mr-6 md:my-1'>Market Cap: {currency.fiatSymbol}{numberWithCommas(currency.marketCap)}</div>
                 </div>
             </div>
         </div>

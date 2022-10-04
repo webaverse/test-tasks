@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 
 export interface CurrencyInfo {
+    fiat: string;
+    fiatSymbol: string;
     id: string;
     icon: string;
     name: string;
@@ -18,9 +20,22 @@ export interface CurrencyListResult {
     data: CurrencyInfo[] | null;
 }
 
-export const UseCurrencyList = () : CurrencyListResult => {
-    const { isLoading, error, data } = useQuery(['currencyListData'], () =>
-    fetch('https://api.coinstats.app/public/v1/coins?currency=USD').then(res =>
+interface symbolMapping {
+    [key: string]: string;
+}
+
+export const fiatSymbols : symbolMapping  = {
+    USD: '$',
+    HKD: 'HK$',
+    KRW: '₩',
+    SGD: 'S$'
+}
+
+export const UseCurrencyList = (fiat: string) : CurrencyListResult => {
+    const fetchKey = `currency-list-${fiat}`;
+    const fetchUrl = `https://api.coinstats.app/public/v1/coins?currency=${fiat}`
+    const { isLoading, error, data } = useQuery([fetchKey], () =>
+    fetch(fetchUrl).then(res =>
         res.json()
         )
     )
@@ -41,6 +56,8 @@ export const UseCurrencyList = () : CurrencyListResult => {
     }
     const currencyList = data.coins.map((coin: any) => {
         const info: CurrencyInfo = {
+            fiat: fiat,
+            fiatSymbol: fiatSymbols[fiat],
             id: coin.id,
             icon: coin.icon,
             name: coin.name,
