@@ -2,6 +2,7 @@
 import { CurrencyInfo } from "../hooks/UseCurrencyList"
 import { useRef } from 'react';
 import { UseOnScreen } from "../hooks/UseOnScreen";
+import { useDebounce } from "use-debounce";
 
 export interface CurrencyProps {
     currency: CurrencyInfo
@@ -15,7 +16,7 @@ export const Currency = (props: CurrencyProps) => {
 
     const ref = useRef<HTMLDivElement>(null)
     const isVisible = UseOnScreen(ref)
-
+    const [debouncedIsVisible] = useDebounce(isVisible, 1000);
     const currency : CurrencyInfo = props.currency
     return(
         <div ref={ref} key={currency.id + 'display'} className='p-2 flex items-start justify-items-start'>
@@ -31,7 +32,7 @@ export const Currency = (props: CurrencyProps) => {
                     </a>
                 </div>
                 <div className='flex flex-col lg:flex-row flex-wrap'>
-                    <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}  {isVisible && `Yep, I'm on screen`}</div>
+                    <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}  {isVisible && `Yep, I'm on screen`} {debouncedIsVisible && `Debounced Visible`}</div>
                     <div className='md:mr-6 md:my-1'>Price: {currency.fiatSymbol}{currency.price}</div>
                     <div className='md:mr-6 md:my-1'>Volume: {currency.fiatSymbol}{numberWithCommas(currency.volume)}</div>
                     <div className='md:mr-6 md:my-1'>Market Cap: {currency.fiatSymbol}{numberWithCommas(currency.marketCap)}</div>
