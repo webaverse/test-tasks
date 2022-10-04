@@ -1,10 +1,20 @@
 const express = require('express');
 const app = express();
+const axios = require("axios").create({baseURL: 'https://api.coinstats.app/public/v1' });
 
 const port = 4000;
 
 app.get('/', (req, res) => {
-    res.json({status: 'success', data: {markets: []}});
+    axios.get('/markets', {params: {coinId: 'bitcoin'}})
+        .then(function (response) {
+            console.log(response.data);
+            res.json({status: 'success', data: {markets: response.data}});
+        })
+        .catch(function (error) {
+            console.log(error);
+            res.status(400);
+            res.json({status: 'error', message: error});
+        })
     });
 
 
