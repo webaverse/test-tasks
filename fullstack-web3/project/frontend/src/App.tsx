@@ -7,6 +7,7 @@ const queryClient = new QueryClient()
 
 function App() {
   const [currentFiat, setCurrentFiat] = useState('USD');
+  const [currentOrder, setCurrentOrder] = useState('rank');
 
   return (
     <>
@@ -17,7 +18,11 @@ function App() {
         <div className="flex flex-col justify-center mx-auto max-w-4xl	">
           <h2 className='text-cyan-600 font-bold mx-auto text-xl'>List of Cryptocurrencies</h2>
           <CurrencySelector currentFiat={currentFiat} setCurrentFiat={setCurrentFiat} />
-          <CurrencyList fiat={currentFiat} />
+          <div className='flex justify-center'>
+            <button onClick={(e) => setCurrentOrder('rank')} className='m-4 py-2 px-4 bg-cyan-600 text-white rounded'>Sort by Rank</button>
+            <button onClick={(e) => setCurrentOrder('name')} className='m-4 py-2 px-4 bg-cyan-600 text-white rounded'>Sort by Name</button>
+          </div>
+          <CurrencyList fiat={currentFiat} order={currentOrder} />
         </div>
       </QueryClientProvider>
     </>
