@@ -13,16 +13,24 @@ export const Currency = (props: CurrencyProps) => {
 
     const currency : CurrencyInfo = props.currency
     return(
-        <div className='p-2 mx-auto'>
-            <div className='m-2'><img src={currency.icon} alt={currency.name} /></div>
-            <div className='m-2 font-bold'>
-                <a target='_none' href={currency.websiteUrl}>
-                    {currency.name} [{currency.symbol}]
+        <div className='p-2 flex items-start justify-items-start'>
+            <div className='my-3 mx-3 md:mx-8 py-2'>
+                <a target='_none' href={currency.websiteUrl} className='block w-24'>
+                    <img src={currency.icon} alt={currency.name} />
                 </a>
             </div>
-            <div className='m-2'>Price: ${currency.price}</div>
-            <div className='m-2'>Volume: ${numberWithCommas(currency.volume)}</div>
-            <div className='m-2'>Market Cap: ${numberWithCommas(currency.marketCap)}</div>
+            <div className='m-2'>
+                <div className='my-2 md:my-1 font-bold text-2xl md:text-lg'>
+                    <a target='_none' href={currency.websiteUrl}>
+                        {currency.name} [{currency.symbol}]
+                    </a>
+                </div>
+                <div className='flex flex-col lg:flex-row'>
+                    <div className='md:my-1'>Price: ${currency.price}</div>
+                    <div className='md:ml-6 md:my-1'>Volume: ${numberWithCommas(currency.volume)}</div>
+                    <div className='md:ml-6 md:my-1'>Market Cap: ${numberWithCommas(currency.marketCap)}</div>
+                </div>
+            </div>
         </div>
     )
 }

@@ -16,7 +16,7 @@ export const CurrencyList = () => {
         return <Currency key={currInfo.id} currency={currInfo} />
     })
     return (
-        <div className='mt-8 p-1 flex flex-col justify-center'>
+        <div className='mt-8 p-1 flex flex-col items-start'>
             {currencies}
         </div>
     )
