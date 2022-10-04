@@ -25,10 +25,11 @@ export const Currency = (props: CurrencyProps) => {
                         {currency.name} [{currency.symbol}]
                     </a>
                 </div>
-                <div className='flex flex-col lg:flex-row'>
-                    <div className='md:my-1'>Price: ${currency.price}</div>
-                    <div className='md:ml-6 md:my-1'>Volume: ${numberWithCommas(currency.volume)}</div>
-                    <div className='md:ml-6 md:my-1'>Market Cap: ${numberWithCommas(currency.marketCap)}</div>
+                <div className='flex flex-col lg:flex-row flex-wrap'>
+                    <div className='md:mr-6 md:my-1'>Rank: #{currency.rank}</div>
+                    <div className='md:mr-6 md:my-1'>Price: ${currency.price}</div>
+                    <div className='md:mr-6 md:my-1'>Volume: ${numberWithCommas(currency.volume)}</div>
+                    <div className='md:mr-6 md:my-1'>Market Cap: ${numberWithCommas(currency.marketCap)}</div>
                 </div>
             </div>
         </div>

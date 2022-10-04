@@ -11,7 +11,7 @@ function App() {
         <img src={logo} className="w-20 m-4" alt="logo" />
       </div>
       <QueryClientProvider client={queryClient}>
-        <div className="flex flex-col justify-center mx-auto max-w-3xl	">
+        <div className="flex flex-col justify-center mx-auto max-w-4xl	">
           <h2 className='text-cyan-600 font-bold mx-auto text-xl'>Currency Info</h2>
           <CurrencyList />
         </div>

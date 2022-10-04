@@ -5,6 +5,7 @@ export interface CurrencyInfo {
     icon: string;
     name: string;
     symbol: string;
+    rank: number;
     price:  number;
     volume: number;
     marketCap: number;
@@ -44,6 +45,7 @@ export const UseCurrencyList = () : CurrencyListResult => {
             icon: coin.icon,
             name: coin.name,
             symbol: coin.symbol,
+            rank: coin.rank,
             price: Math.round(coin.price * 100) / 100,
             volume: Math.round(coin.volume),
             marketCap: Math.round(coin.marketCap),
