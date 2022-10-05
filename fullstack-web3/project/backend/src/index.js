@@ -4,10 +4,36 @@ const axios = require("axios").create({baseURL: 'https://api.coinstats.app/publi
 
 const port = 4000;
 
-app.get('/', (req, res) => {
-    axios.get('/markets', {params: {coinId: 'bitcoin'}})
+const getCachedList = (coin) => {
+    if (!app.locals[coin]) {
+        return null;
+    }
+    const cacheExpiration = Date.now() - 1000 * 60;
+    if (app.locals[coin].updatedAt < cacheExpiration) {
+        return null;
+    }
+    return app.locals[coin].list;
+}
+
+const setCachedList = (coin, list) => {
+    app.locals[coin] = {
+        updatedAt: Date.now(),
+        list
+    }
+}
+
+app.get('/:currency/:fiat', (req, res) => {
+    const { currency, fiat } = req.params;
+    const cachedList = getCachedList(currency);
+    if (cachedList) {
+        console.log(`returning markets for ${currency} from cache`);
+        res.json({status: 'success', data: {markets: cachedList}});
+        return;
+    }
+    console.log(`fetching markets for ${currency} from coinstats API`);
+    axios.get('/markets', {params: {coinId: currency}})
         .then(function (response) {
-            console.log(response.data);
+            setCachedList(currency, response.data);
             res.json({status: 'success', data: {markets: response.data}});
         })
         .catch(function (error) {
