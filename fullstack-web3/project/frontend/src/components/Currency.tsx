@@ -1,11 +1,13 @@
 
 import { CurrencyInfo } from "../hooks/UseCurrencyList"
+import { BestExchange } from "./BestExchange"
 import { useRef } from 'react';
 import { UseOnScreen } from "../hooks/UseOnScreen";
 import { useDebounce } from "use-debounce";
 
 export interface CurrencyProps {
     currency: CurrencyInfo
+    fiat: string
 }
 
 function numberWithCommas(x: number) : string {
@@ -18,7 +20,7 @@ export const Currency = (props: CurrencyProps) => {
     const isVisible = UseOnScreen(ref)
     const [debouncedIsVisible] = useDebounce(isVisible, 1000);
     const currency : CurrencyInfo = props.currency
-    const bestMarket = debouncedIsVisible && `Marketplace X ${currency.fiatSymbol}${currency.id}`
+    const bestExchange = debouncedIsVisible && <BestExchange currency={currency.id} fiat={props.fiat} />
     return(
         <div ref={ref} key={currency.id + 'display'} className='p-2 flex items-start justify-items-start'>
             <div className='my-3 mx-3 md:mx-8 py-2'>
@@ -37,7 +39,7 @@ export const Currency = (props: CurrencyProps) => {
                     <div className='md:mr-6 md:my-1'>Price: {currency.fiatSymbol}{currency.price}</div>
                     <div className='md:mr-6 md:my-1'>Volume: {currency.fiatSymbol}{numberWithCommas(currency.volume)}</div>
                     <div className='md:mr-6 md:my-1'>Market Cap: {currency.fiatSymbol}{numberWithCommas(currency.marketCap)}</div>
-                    <div className='md:mr-6 md:my-1'>Best Purchase: {bestMarket}</div>
+                    {bestExchange}
                 </div>
             </div>
         </div>

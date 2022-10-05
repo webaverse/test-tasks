@@ -24,7 +24,7 @@ export const CurrencyList = (props: CurrencyListProps) => {
             return a.rank - b.rank 
         }
     }).map((currInfo, index) => {
-        return <Currency key={currInfo.id} currency={currInfo} />
+        return <Currency key={currInfo.id} currency={currInfo} fiat={props.fiat} />
     })
 
     return (

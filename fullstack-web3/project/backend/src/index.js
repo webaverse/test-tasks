@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const axios = require("axios").create({baseURL: 'https://api.coinstats.app/public/v1' });
 
 const port = 4000;
+app.use(cors())
 
 const getCachedList = (coin) => {
     if (!app.locals[coin]) {
