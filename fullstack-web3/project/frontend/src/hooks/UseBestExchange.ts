@@ -12,17 +12,20 @@ export const UseBestExchange = (visible: boolean, currency: string, fiat: string
     if (visible && !viewed) {
         setViewed(true)
     }
-    const shouldLoad = visible || viewed
+    const shouldLoad = viewed
     const shouldLoadString = shouldLoad ? 'true' : 'false'
     const fetchKey = `best-exchange-${currency}-${fiat}-${shouldLoadString}`
     const fetchUrl = `http://localhost:4000/cheapest-exchange/${currency}/${fiat}`
     const { isLoading, error, data } = useQuery([fetchKey], () => {
         if (shouldLoad) {
+            console.log(`FETCHING ${fetchUrl}`)
             return fetch(fetchUrl).then(res => res.json())
         } else {
-            return {status: 'not-loaded'}
+            return new Promise((resolve, reject) => {
+                resolve({status: 'not-loaded'})
+            });
         }
-    })
+    }, {staleTime: 1000 * 60 * 5})
     if (isLoading) {
         return {
             status: 'loading',
@@ -40,7 +43,7 @@ export const UseBestExchange = (visible: boolean, currency: string, fiat: string
     }
     if (data.status === 'not-loaded') {
         return {
-            status: 'loading',
+            status: 'not-loaded',
             error: null,
             name: null
         } 

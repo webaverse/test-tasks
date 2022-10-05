@@ -11,6 +11,9 @@ export const BestExchange = (props: BestExchangeProps) => {
 
     const bestExchange = UseBestExchange(props.visible, props.currency, props.fiat)
 
+    if (bestExchange.status === 'not-loaded') {
+        return <div>Best Exchange: </div>
+    }
     if (bestExchange.status === 'loading') {
         return <div>Best Exchange: Loading...</div>
     }
