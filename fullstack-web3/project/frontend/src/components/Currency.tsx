@@ -20,9 +20,8 @@ export const Currency = (props: CurrencyProps) => {
     const isVisible = UseOnScreen(ref)
     const [debouncedIsVisible] = useDebounce(isVisible, 1000);
     const currency : CurrencyInfo = props.currency
-    const bestExchange = debouncedIsVisible && <BestExchange currency={currency.id} fiat={props.fiat} />
     return(
-        <div ref={ref} key={currency.id + 'display'} className='p-2 flex items-start justify-items-start'>
+        <div ref={ref} key={currency.id} className='p-2 flex items-start justify-items-start'>
             <div className='my-3 mx-3 md:mx-8 py-2'>
                 <a target='_none' href={currency.websiteUrl} className='block w-24'>
                     <img src={currency.icon} alt={currency.name} className='mx-auto' />
@@ -39,7 +38,7 @@ export const Currency = (props: CurrencyProps) => {
                     <div className='md:mr-6 md:my-1'>Price: {currency.fiatSymbol}{currency.price}</div>
                     <div className='md:mr-6 md:my-1'>Volume: {currency.fiatSymbol}{numberWithCommas(currency.volume)}</div>
                     <div className='md:mr-6 md:my-1'>Market Cap: {currency.fiatSymbol}{numberWithCommas(currency.marketCap)}</div>
-                    {bestExchange}
+                    <BestExchange visible={debouncedIsVisible} currency={currency.id} fiat={props.fiat} />
                 </div>
             </div>
         </div>

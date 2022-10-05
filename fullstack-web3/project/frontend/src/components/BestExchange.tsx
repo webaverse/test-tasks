@@ -1,6 +1,7 @@
 import { UseBestExchange } from "../hooks/UseBestExchange";
 
 export interface BestExchangeProps {
+    visible: boolean
     currency: string
     fiat: string
 }
@@ -8,7 +9,7 @@ export interface BestExchangeProps {
 
 export const BestExchange = (props: BestExchangeProps) => {
 
-    const bestExchange = UseBestExchange(props.currency, props.fiat)
+    const bestExchange = UseBestExchange(props.visible, props.currency, props.fiat)
 
     if (bestExchange.status === 'loading') {
         return <div>Best Exchange: Loading...</div>
